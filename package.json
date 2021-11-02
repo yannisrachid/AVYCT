@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/yannisrachid/AVYCT/issues"
   },
-  "homepage": "https://github.com/yannisrachid/AVYCT#readme"
+  "homepage": "https://github.com/yannisrachid/AVYCT#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
