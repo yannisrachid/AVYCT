@@ -23,6 +23,7 @@ app.get("/", function (req, res) {
   console.log(req.query)
   res.format({
     json : () => {
+      console.log("JSON");
       const data = collect(res, "all", "json", req.query);
       res.status(("error" in data) ? 400 : 200);
       res.json(data);

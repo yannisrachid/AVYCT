@@ -43,7 +43,7 @@ module.exports = class CollectorDrugs {
             }
             this.data[state] = state_obj;
         }
-        console.log("COMPUTE(D) : ", this.data);
+        // console.log("COMPUTE(D) : ", this.data);
         return this.data;
 
     }

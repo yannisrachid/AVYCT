@@ -19,10 +19,10 @@ module.exports = class CollectorIncomes {
 
         // this.data = this.extract_data('incomes');
         const that = this;
-
         this.format_query();
         //console.log(this.query);
-        this.data = _.pick(this.data, this.query.state);
+        if (this.query.state !== undefined) this.data = _.pick(this.data, this.query.state);
+        // this.data = (this.query.state != undefined) ? _.pick(this.data, this.query.state) : this.data;
 
         // this.data = this.data.map(state => {
         //     state = _.pick(state, that.query.year);
@@ -46,13 +46,13 @@ module.exports = class CollectorIncomes {
                     var quarter_obj = year_obj[quarter];
                     quarter_obj = _.pick(quarter_obj, this.query.metric);
                     year_obj[quarter] = quarter_obj;
-                    console.log("metric", quarter_obj);
+                    // console.log("metric", quarter_obj);
                 }
 
             }
             this.data[state] = state_obj;
         }
-        console.log("COMPUTE(I) : ", this.data);
+        // console.log("COMPUTE(I) : ", this.data);
         //console.log("COMPUTE(I) query : ", this.query);
         return this.data;
 
@@ -60,13 +60,12 @@ module.exports = class CollectorIncomes {
 
     format_query() {
 
-        const default_query = { state: 'Alabama', year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
+        const default_query = { state: undefined, year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 
         // STATES
-        if (this.query.state.includes(',')) {
-
+        if (this.query.state != undefined && this.query.state.includes(',')) {
             this.query.state = this.query.state.split(',');
         }
 
