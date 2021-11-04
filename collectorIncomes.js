@@ -39,6 +39,14 @@ module.exports = class Collector{
                 var year_obj = state_obj[year];
                 year_obj = _.pick(year_obj, this.query.quarter);
                 state_obj[year] = year_obj;
+
+                for (let quarter in year_obj) {
+                    var quarter_obj = year_obj[quarter];
+                    quarter_obj = _.pick(quarter_obj, this.query.metric);
+                    year_obj[quarter] = quarter_obj;
+                    console.log("metric", quarter_obj);
+                }
+
             }
             this.data[state] = state_obj;
         }
@@ -48,7 +56,7 @@ module.exports = class Collector{
 
     format_query() {
 
-        const default_query = { state: 'US', year: undefined, quarter: undefined, type: "json"};
+        const default_query = { state: 'US', year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 
@@ -113,6 +121,11 @@ module.exports = class Collector{
             for (var i = 1; i<=4; i++) {
                 this.query.quarter.push("Q"+i);
             }
+        }
+
+        // METRICS
+        if (typeof this.query.metric != "object" && this.query.metric.includes(',')) {
+            this.query.metric = this.query.metric.split(',');
         }
 
     }
