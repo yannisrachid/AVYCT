@@ -8,11 +8,125 @@ const fetch = require("cross-fetch");
 module.exports = class Collector{
     
 
-    constructor() {
-
+    constructor(query) {
+        this.query = query;
+        //TO DO MERGE
+        //this.data = this.extract_data('drugs');
     }
 
     compute() {
+        const that = this;
+
+        this.format_query();
+        //console.log(this.query);
+        this.data = this.get_data(this.query.year);
+
+        this.data = _.pick(this.data, this.query.state);
+
+        for (let state in this.data) {
+            var state_obj = this.data[state];
+
+            for (let year in state_obj) {
+                var year_obj = state_obj[year];
+                year_obj = _.pick(year_obj, this.query.age);
+                
+
+                for (let age in year_obj) {
+                    var age_obj = year_obj[age];
+                    age_obj = _.pick(age_obj, this.query.drug);
+                    year_obj[age] = age_obj;
+                    //console.log("metric", age_obj);
+                    //console.log(Object.keys(year_obj));
+                }
+                state_obj[year] = year_obj;
+            }
+            this.data[state] = state_obj;
+        }
+        return this.data;
+
+    }
+
+    get_data(param) {
+
+        // 2015 ou [2015, 2016, 2017]
+
+        console.log(param);
+        if (param !== undefined && typeof param == "string") {
+            return extract_data('drugs_'+param);
+
+        } else if (param !== undefined && typeof param == "object") {
+
+            var debut = 1;
+            var big_obj = new Object;
+
+            for (var i = 1; i<param.length; i++) {
+                if (debut==0) {
+                    console.log('milieu');
+                    console.log(param[i]);
+                    var obj_i = this.extract_data("drugs_"+param[i]);
+                    big_obj = this.merge_object_years(big_obj, obj_i);
+                } else {
+                    console.log('debut');
+                    console.log(param[i-1], param[i]);
+                    var obj_1 = this.extract_data("drugs_"+param[i-1]);
+                    var obj_2 = this.extract_data("drugs_"+param[i]);
+                    big_obj = this.merge_object_years(obj_1, obj_2);
+                    debut=0;
+                }
+            }
+        }
+        return big_obj;
+    }
+
+
+    format_query() {
+
+        const default_query = { state: 'Total U.S.', year: undefined, age: ['12+95L', '12+95U', '12+Estimate', '12-17-95L', '12-17-95U', '12-17-Estimate', '18+95L', '18+95U', '18+Estimate', '18-25-95L', '18-25-95U', '18-25-Estimate', '26+95L', '26+95U', '26+Estimate'], drug: ['alcohol','cigarette','cocaine','marijuana','heroin','illicit_drug','substance','pain_reliever','tobacco_product','depressive','methamphetamine','suicide','mental'], type: "json"};
+
+        this.query = Object.assign(default_query, this.query);
+
+        // STATES
+        if (this.query.state.includes(',')) {
+
+            this.query.state = this.query.state.split(',');
+        }
+
+        // YEARS
+        if (this.query.year !== undefined && this.query.year.includes(',')) {
+
+            this.query.year = this.query.year.split(',');
+
+        } else if (this.query.year !== undefined && this.query.year.includes('-')){
+
+            this.query.year = this.query.year.split('-');
+
+            this.query.year = this.query.year.map(x => parseInt(x, 10));
+
+            var tbl=[]
+
+            for (var i = this.query.year[0]; i<=this.query.year[1]; i++) {
+
+                tbl.push(i);
+            }
+
+            this.query.year = tbl;
+
+        } else if (this.query.year === undefined) {
+
+            this.query.year = []
+            for (var i = 2013; i<=2019; i++) {
+                this.query.year.push(i);
+            }
+        }
+        // AGE
+        if (typeof this.query.age!= "object" && this.query.age.includes(',')) {
+            this.query.age = this.query.age.split(',');
+        }
+
+        // DRUGS
+        if (typeof this.query.drug!= "object" && this.query.drug.includes(',')) {
+            this.query.drug = this.query.drug.split(',');
+        }
 
     }
 
