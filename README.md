@@ -87,7 +87,7 @@ Filtres :
 - state : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule, si la valeur *all* est donnée un résultat pour chaque état est rendu
 - estimate : false pour obtenir les intervalles de confiance, true pour obtenir une estimation, si rien n'est spécifié les deux sont retournés
 - demographic : pour obtenir seulement certaines catégories d'âges -parmis [12-17, 18-25, 26+, 12+, 18+]-
-- drugs : pour obtenir seulement les colonnes concernant une drogue en particulier, pour plusieurs drogues il faut les séparer par une virgule -parmis : [Marijuana, Cocaine, Heroin, PainReliever, Alcohol, Tobacco, Illicit, Mental, Suicide]-
+- drugs : pour obtenir seulement les colonnes concernant une drogue en particulier, pour plusieurs drogues il faut les séparer par une virgule -parmis : [alcohol, cigarette, cocaine, marijuana, heroin, illicit_drug, substance, pain_reliever, tobacco_product, depressive, methamphetamine, suicide, mental]-
 - metric : pour obtenir seulement les métriques spécifiées, pour obtenir plusieurs métriques il faut les séparer par une virgule -parmis : [personal_income, population, per_capita_personal_income]-
 - type : le type des données -parmis : [XML, JSON]-
 
