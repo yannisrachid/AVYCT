@@ -451,7 +451,81 @@ module.exports = class Collector{
 
         return output_general_drugs;
     }
-    
+
+    merge_object_years(object_ann1, object_ann2) {
+    /*  const object1 = { 
+                'Alabama': {
+                    2018: {'a': 'a', 'b': 'b', 'c': 'c'}
+                }, 
+                'Arkansas': {
+                    2018: {'a': 'a', 'b': 'b', 'c': 'c'}
+                }, 
+                'Miami': {
+                    2018: {'a': 'a', 'b': 'b', 'c': 'c'}
+                }, 
+            };
+            
+            const object2 = {
+                Alabama: {
+                    '2016': { 'a': 'a', 'b': 'b', 'c': 'c' },
+                    '2017': { 'a': 'a', 'b': 'b', 'c': 'c' }
+                },
+                Arkansas: {
+                    '2016': { 'a': 'a', 'b': 'b', 'c': 'c' },
+                    '2017': { 'a': 'a', 'b': 'b', 'c': 'c' }
+                },
+                Miami: {
+                    '2016': { 'a': 'a', 'b': 'b', 'c': 'c' },
+                    '2017': { 'a': 'a', 'b': 'b', 'c': 'c' }
+                }
+                };
+
+            output will be :
+            {
+            Alabama: {
+                    '2016': { a: 'a', b: 'b', c: 'c' },
+                    '2017': { a: 'a', b: 'b', c: 'c' },
+                    '2018': { a: 'a', b: 'b', c: 'c' }
+                },
+                Arkansas: {
+                    '2016': { a: 'a', b: 'b', c: 'c' },
+                    '2017': { a: 'a', b: 'b', c: 'c' },
+                    '2018': { a: 'a', b: 'b', c: 'c' }
+                },
+                Miami: {
+                    '2016': { a: 'a', b: 'b', c: 'c' },
+                    '2017': { a: 'a', b: 'b', c: 'c' },
+                    '2018': { a: 'a', b: 'b', c: 'c' }
+                }
+            }
+        */
+        // Création de notre objet à output
+        var output_object = new Object();
+        // possible copie
+        //var output_object =object_ann1;
+
+        Object.entries(object_ann1).forEach(entry_object_1=> {
+            const [state, value_object_1] = entry_object_1;
+            output_object[state]=new Object;
+            //const ann1=Object.keys(values_state_1);
+
+            
+            Object.entries(value_object_1).forEach(entry=> {
+                const [year, value_year] = entry;
+                output_object[state][year]=value_year;
+            });
+
+            Object.entries(object_ann2[state]).forEach(entry=> {
+                const [year, value_year] = entry;
+                output_object[state][year]=value_year;
+            });
+
+        });
+
+        return output_object;
+
+    }
+
     
     
 };
