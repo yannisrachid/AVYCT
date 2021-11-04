@@ -38,13 +38,6 @@ module.exports = class Collector{
             for (let year in state_obj) {
                 var year_obj = state_obj[year];
                 year_obj = _.pick(year_obj, this.query.quarter);
-
-                // for (let quarter in year_obj) {
-                //     var quarter_obj = year_obj[quarter];
-                //     quarter_obj = _.pick(quarter_obj, this.query.metric);
-                //     year_obj[quarter] = quarter_obj;
-                // }
-
                 state_obj[year] = year_obj;
             }
             this.data[state] = state_obj;
@@ -55,7 +48,7 @@ module.exports = class Collector{
 
     format_query() {
 
-        const default_query = { state: 'US', year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
+        const default_query = { state: 'US', year: undefined, quarter: undefined, type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 
@@ -121,12 +114,6 @@ module.exports = class Collector{
                 this.query.quarter.push("Q"+i);
             }
         }
-
-        // METRICS
-        // if (typeof this.query.metric != "object" && this.query.metric.includes(',')) {
-        //     this.query.metric = this.query.metric.split(',');
-        // }
-
 
     }
 
@@ -429,14 +416,22 @@ module.exports = class Collector{
 
         });
 
+        var map_stat = {
+            'Personal income (millions of dollars, seasonally adjusted)': 'personal_income',
+            'Population (midperiod, persons) 1/': 'population',
+            'Per capita personal income (dollars) 2/': 'per_capita_personal_income'
+        };
+
         Object.keys(output_quarter_pivot).forEach(key => {
                 
             for (var q of quartiles) {
                 
                 const key2search = key.concat(':', q);
-                if (Object.keys(pivoted_year).includes(key2search))
-                    output_quarter_pivot[key][q] = pivoted_year[key2search];
-                
+                if (Object.keys(pivoted_year).includes(key2search)){
+                    var stat_block = this.rename_keys(pivoted_year[key2search], map_stat);
+                    output_quarter_pivot[key][q] = stat_block;
+                };
+
             };
         });
 
