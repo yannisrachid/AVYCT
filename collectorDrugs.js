@@ -19,14 +19,14 @@ module.exports = class Collector{
     extract_data(csv_name) {
         
         try {
-            
+            // const csv_name = 'drugs_2016'
             // VERSION CSV
             let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
             let csv_json = Papa.parse(csv, {encoding: "utf-8"});
             
             //TODO: modifier les appels
-            var output = this.formating_wages_from_csv(csv_json);
-            console.log(Object.keys(output));
+            var output = this.formating_drugs_from_csv(csv_name, csv_json);
+            //console.log(Object.keys(output));
             return output;
             /**/
             /*
@@ -71,7 +71,9 @@ module.exports = class Collector{
         return _.omit(old_line, Object.keys(map));
     };
 
-    formating_wages_from_csv(csv_json) {
+    formating_drugs_from_csv(csv_name, csv_json) {
+
+        const year = csv_name.split("_")[1];
         
         const header_line_ages_cat = "0"
         const header_line_drugs_cat = "1"
@@ -273,7 +275,7 @@ module.exports = class Collector{
         
         //var entry_list = pivoted_states.Arizona;
         
-        var year = '2016'
+        // var year = '2016'
 
         Object.entries(pivoted_states).forEach(entry => {
 
