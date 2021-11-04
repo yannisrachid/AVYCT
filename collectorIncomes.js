@@ -8,14 +8,112 @@ const fetch = require("cross-fetch");
 module.exports = class Collector{
     
 
-    constructor() {
-
+    constructor(query) {
+        this.query = query;
+        this.data = this.extract_data('incomes');
     }
 
     compute() {
-        var data = this.extract_data('incomes');
-        const states = ['Indiana', 'Kentucky'];
-        
+        // var data = this.extract_data('incomes');
+
+        const that = this;
+
+        this.format_query();
+        //console.log(this.query);
+        this.data = _.pick(this.data, this.query.state);
+
+        // this.data = this.data.map(state => {
+        //     state = _.pick(state, that.query.year);
+
+        //     state = state.map(year => {
+        //         year = _.pick(year, that.query.quarter);
+            
+        //     });
+        // });
+
+        for (let state in this.data) {
+            var state_obj = this.data[state];
+            state_obj = _.pick(state_obj, this.query.year);
+            //console.log("years", state_obj);
+            for (let year in state_obj) {
+                var year_obj = state_obj[year];
+                year_obj = _.pick(year_obj, this.query.quarter);
+                state_obj[year] = year_obj;
+            }
+            this.data[state] = state_obj;
+        }
+        return this.data;
+
+    }
+
+    format_query() {
+
+        const default_query = { state: 'US', year: undefined, quarter: undefined, type: "json"};
+
+        this.query = Object.assign(default_query, this.query);
+
+        // STATES
+        if (this.query.state.includes(',')) {
+
+            this.query.state = this.query.state.split(',');
+        }
+
+        // YEARS
+        if (this.query.year !== undefined && this.query.year.includes(',')) {
+
+            this.query.year = this.query.year.split(',');
+
+        } else if (this.query.year !== undefined && this.query.year.includes('-')){
+
+            this.query.year = this.query.year.split('-');
+
+            this.query.year = this.query.year.map(x => parseInt(x, 10));
+
+            var tbl=[]
+
+            for (var i = this.query.year[0]; i<=this.query.year[1]; i++) {
+
+                tbl.push(i);
+            }
+
+            this.query.year = tbl;
+
+        } else if (this.query.year === undefined) {
+
+            this.query.year = []
+            for (var i = 2013; i<=2019; i++) {
+                this.query.year.push(i);
+            }
+        }
+
+        // QUARTERS
+        if (this.query.quarter !== undefined && this.query.quarter.includes(',')) {
+
+            this.query.quarter = this.query.quarter.split(',');
+
+        } else if (this.query.quarter !== undefined && this.query.quarter.includes('-')){
+
+            this.query.quarter = this.query.quarter.split('-');
+
+            this.query.quarter = this.query.quarter.map(x => x[1]);
+            this.query.quarter = this.query.quarter.map(x => parseInt(x, 10));
+
+            var tbl=[]
+
+            for (var i = this.query.quarter[0]; i<=this.query.quarter[1]; i++) {
+
+                tbl.push("Q"+i);
+            }
+
+            this.query.quarter = tbl;
+
+        } else if (this.query.quarter === undefined) {
+
+            this.query.quarter = []
+            for (var i = 1; i<=4; i++) {
+                this.query.quarter.push("Q"+i);
+            }
+        }
 
     }
 
@@ -256,7 +354,7 @@ module.exports = class Collector{
             });
         */
         delete pivoted_states["undefined"];
-        console.log(Object.keys(pivoted_states));
+        //console.log(Object.keys(pivoted_states));
         return pivoted_states;
     }
 
