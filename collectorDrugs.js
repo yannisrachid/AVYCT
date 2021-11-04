@@ -5,7 +5,7 @@ const { addAbortSignal } = require('stream');
 var _ = require("underscore");
 const fetch = require("cross-fetch");
 
-module.exports = class Collector{
+module.exports = class CollectorDrugs {
     
 
     constructor(query) {
@@ -42,6 +42,7 @@ module.exports = class Collector{
             }
             this.data[state] = state_obj;
         }
+        console.log("COMPUTE(D) : ", this.data);
         return this.data;
 
     }
@@ -50,9 +51,11 @@ module.exports = class Collector{
 
         // 2015 ou [2015, 2016, 2017]
 
-        console.log(param);
+        // console.log(param);
         if (param !== undefined && typeof param == "string") {
-            return extract_data('drugs_'+param);
+            const some = this.extract_data("drugs_" + param);
+            return some;
+            // return this.extract_data('drugs_'+param);
 
         } else if (param !== undefined && typeof param == "object") {
 
@@ -61,13 +64,13 @@ module.exports = class Collector{
 
             for (var i = 1; i<param.length; i++) {
                 if (debut==0) {
-                    console.log('milieu');
-                    console.log(param[i]);
+                    // console.log('milieu');
+                    // console.log(param[i]);
                     var obj_i = this.extract_data("drugs_"+param[i]);
                     big_obj = this.merge_object_years(big_obj, obj_i);
                 } else {
-                    console.log('debut');
-                    console.log(param[i-1], param[i]);
+                    // console.log('debut');
+                    // console.log(param[i-1], param[i]);
                     var obj_1 = this.extract_data("drugs_"+param[i-1]);
                     var obj_2 = this.extract_data("drugs_"+param[i]);
                     big_obj = this.merge_object_years(obj_1, obj_2);
@@ -135,39 +138,36 @@ module.exports = class Collector{
         try {
             // const csv_name = 'drugs_2016'
             // VERSION CSV
-            let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
-            let csv_json = Papa.parse(csv, {encoding: "utf-8"});
+            // let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
+            // let csv_json = Papa.parse(csv, {encoding: "utf-8"});
             
-            //TODO: modifier les appels
-            var output = this.formating_drugs_from_csv(csv_name, csv_json);
-            //console.log(Object.keys(output));
-            return output;
+            // //TODO: modifier les appels
+            // var output = this.formating_drugs_from_csv(csv_name, csv_json);
+            // //console.log(Object.keys(output));
+            // return output;
             /**/
-            /*
-            // VERSION FETCH
             
+            // VERSION FETCH
             var csv_fetch = undefined;
-            fetch("http://91.168.117.237:1905/incomes.csv")
+            fetch("http://91.168.117.237:1905/" + csv_name + ".csv")
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 csv_fetch = data; // do something with data
-                console.log(csv_fetch);
+                // console.log(csv_fetch);
 
                 //let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
                 //let csv_json = Papa.parse(csv, {encoding: "utf-8"});
                 //console.log(csv_json.data.length);
                 
                 //TODO: modifier les appels
-                var output = this.formating_wages_from_csv(csv_fetch);
-                
+                var output = this.formating_drugs_from_csv(csv_name, data);
                 return output;
             })
             .catch(rejected => {
                 console.log(rejected);
             });
             //console.log(csv_fetch);
-            */
         
         } catch(e){
             console.error(e);

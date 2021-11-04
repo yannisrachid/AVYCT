@@ -1,9 +1,9 @@
-const collectorWages = require("./collectorWages");
+const collectorIncomes = require("./collectorIncomes");
 const collectorDrugs = require("./collectorDrugs");
 
 module.exports = class CollectorMega {
     constructor(path, type, query) {
-        this.collectWages = new collectorWages(query);
+        this.collectIncomes = new collectorIncomes(query);
         this.collectDrugs = new collectorDrugs(query);
 
         this.path = path;
@@ -94,10 +94,9 @@ module.exports = class CollectorMega {
     }
 
     #format_data(type, data) {
-        if (type == "json") {
-            data = JSON.Stringify(data);
-        } else if (type == "xml") {
-            data = this.#to_xml(data);
+        if (type == "xml") {
+            // data = JSON.stringify(data);
+            // console.log("OUT : ", typeof data);
         } else if (type == "rdf") {
             data = this.#to_rdf(data);
         }
@@ -105,16 +104,17 @@ module.exports = class CollectorMega {
         return data;
     }
 
-    compute = () => {
+    compute() {
+        var data = {};
         if (this.path == "all") {
-            dataWages = this.collectorWages.compute();
-            dataDrugs = this.collectorDrugs.compute();
-
+            const dataWages = this.collectIncomes.compute();
+            const dataDrugs = this.collectDrugs.compute();
+            console.log(dataWages, dataDrugs);
             data = this.#data_merger(dataWages, dataDrugs);
         } else if (this.path == "wages") {
-            data = this.collectorWages.compute();
+            data = this.collectWages.compute();
         } else if (this.path == "drugs") {
-            data = this.collectorDrugs.compute();
+            data = this.collectDrugs.compute();
         }
 
         return this.#format_data(this.type, data);

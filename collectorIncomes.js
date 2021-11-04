@@ -5,7 +5,7 @@ const { addAbortSignal } = require('stream');
 var _ = require("underscore");
 const fetch = require("cross-fetch");
 
-module.exports = class Collector{
+module.exports = class CollectorIncomes {
     
 
     constructor(query) {
@@ -16,6 +16,7 @@ module.exports = class Collector{
     compute() {
         // var data = this.extract_data('incomes');
 
+        // this.data = this.extract_data('incomes');
         const that = this;
 
         this.format_query();
@@ -50,6 +51,7 @@ module.exports = class Collector{
             }
             this.data[state] = state_obj;
         }
+        console.log("COMPUTE(I) : ", this.data);
         return this.data;
 
     }
@@ -135,22 +137,21 @@ module.exports = class Collector{
         try {
             
             // VERSION CSV
-            let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
-            let csv_json = Papa.parse(csv, {encoding: "utf-8"});
+            // let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
+            // let csv_json = Papa.parse(csv, {encoding: "utf-8"});
             
-            //TODO: modifier les appels
-            var output = this.formating_wages_from_csv(csv_json);
-            //console.log(Object.keys(output));
-            return output;
+            // //TODO: modifier les appels
+            // var output = this.formating_wages_from_csv(csv_json);
+            // //console.log(Object.keys(output));
+            // return output;
 
             // VERSION FETCH
-            /*
             var csv_fetch = undefined;
             fetch("http://91.168.117.237:1905/incomes.csv")
             .then(res => res.json())
             .then(data => {
                 csv_fetch = data; // do something with data
-                console.log(csv_fetch);
+                // console.log(csv_fetch);
 
                 //let csv = fs.readFileSync('./data/' + csv_name + '.csv', "utf-8");
                 //let csv_json = Papa.parse(csv, {encoding: "utf-8"});
@@ -165,7 +166,6 @@ module.exports = class Collector{
                 console.log(rejected);
             });
             //console.log(csv_fetch);
-            */
         
         } catch(e){
             console.error(e);
