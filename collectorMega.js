@@ -1,17 +1,15 @@
-// const collectorWages = require("./collectorWages");
-// const collectorDrugs = require("./collectorDrugs");
+const collectorWages = require("./collectorWages");
+const collectorDrugs = require("./collectorDrugs");
 
 module.exports = class CollectorMega {
-    constructor(path, query) {
-        // this.collectWages = new collectorWages(query);
-        // this.collectDrugs = new collectorDrugs(query);
+    constructor(path, type, query) {
+        this.collectWages = new collectorWages(query);
+        this.collectDrugs = new collectorDrugs(query);
+
         this.path = path;
+        this.type = type;
+
         this.query = query;
-        this.type = "json";
-        if ("type" in this.query) {
-            this.type = this.query.type;
-            delete this.query.type;
-        }
     }
 
     #data_merger(wages, drugs) {
@@ -35,46 +33,34 @@ module.exports = class CollectorMega {
     }
 
     #wages_to_xml(wages) {
-        var s = `<wages>`;
-        console.log(`\t\tWAGE`);
+        var s = "<wages>";
         Object.entries(wages).forEach(([quarter, data]) => {
-            s += `<quarter id:${quarter}>`;
-            console.log(`\t\t\tQUARTER:${quarter}`);
+            s += `<quarter id=${quarter}>`;
             Object.entries(data).forEach(([key, value]) => {
                 key = key.split(' ')[0];
-                console.log(`\t\t\t\t${key}:${value}`);
                 s += `<"${key}">${value}</${key}>`;
             });
-            s += `</quarter>`;
-            console.log(`\t\t\t/QUARTER`);
+            s += "</quarter>";
         });
-        s += `</wages>`;
-        console.log(`\t\t/WAGE`);
+        s += "</wages>";
         return s;
     }
 
     #drugs_to_xml(drugs) {
         var s = "<drugs>";
-        console.log("\t\tDRUGS");
         Object.entries(drugs).forEach(([age, drugs]) => {
-            s += `<age id:${age}>`;
-            console.log(`\t\t\tAGE:${age}`);
+            s += `<age id=${age}>`;
             Object.entries(drugs).forEach(([drug, data]) => {
-                s += `<drug id:${drug}>`;
-                console.log(`\t\t\t\tDRUG:${drug}`);
+                s += `<drug id=${drug}>`;
                 Object.entries(data).forEach(([key, value]) => {
                     key = key.split(' ')[0];
-                    console.log(`\t\t\t\t\t${key}:${value}`);
                     s += `<${key}>${value}</${key}>`;
                 });
-                s += `</drug>`;
-                console.log(`\t\t\t\t/DRUG`);
+                s += "</drug>";
             });
-            s += `</age>`;
-            console.log(`\t\t\t/AGE`);
+            s += "</age>";
         });
         s += "</drugs>";
-        console.log("\t\tDRUGS");
         return s;
     }
 
@@ -83,9 +69,9 @@ module.exports = class CollectorMega {
         const path = this.path;
         var s = `<?xml version="1.0" encoding="UTF-8"?>`;
         Object.entries(data).forEach(([state, years]) => {
-            s += `<state id:${state}>`;
+            s += `<state id=${state}>`;
             Object.entries(years).forEach(([year, data]) => {
-                s += `<year id:${year}>`;
+                s += `<year id=${year}>`;
                 if (path == "all") {
                     s += that.#wages_to_xml(data.Wages);
                     s += that.#drugs_to_xml(data.Drugs);
@@ -95,12 +81,16 @@ module.exports = class CollectorMega {
                     s += that.#drugs_to_xml(data);
                 }
 
-                s += `</year>`;
+                s += "</year>";
             });
 
-            s += `</state>`;
+            s += "</state>";
         });
         return s;
+    }
+
+    #to_rdf(data) {
+        return this.#to_xml(data);
     }
 
     #format_data(type, data) {
@@ -109,7 +99,7 @@ module.exports = class CollectorMega {
         } else if (type == "xml") {
             data = this.#to_xml(data);
         } else if (type == "rdf") {
-            data = this.#to_xml(data);
+            data = this.#to_rdf(data);
         }
 
         return data;
@@ -121,7 +111,6 @@ module.exports = class CollectorMega {
             dataDrugs = this.collectorDrugs.compute();
 
             data = this.#data_merger(dataWages, dataDrugs);
-            
         } else if (this.path == "wages") {
             data = this.collectorWages.compute();
         } else if (this.path == "drugs") {
