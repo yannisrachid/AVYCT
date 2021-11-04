@@ -24,6 +24,7 @@
     "node-fetch": "^3.0.0",
     "papaparse": "^5.3.1",
     "reduce": "^1.0.2",
-    "underscore": "^1.13.1"
+    "underscore": "^1.13.1",
+    "xmlhttprequest": "^1.8.0"
   }
 }

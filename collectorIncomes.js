@@ -4,6 +4,7 @@ const Papa = require("papaparse");
 const { addAbortSignal } = require('stream');
 var _ = require("underscore");
 const fetch = require("cross-fetch");
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = class CollectorIncomes {
     
@@ -52,13 +53,14 @@ module.exports = class CollectorIncomes {
             this.data[state] = state_obj;
         }
         console.log("COMPUTE(I) : ", this.data);
+        //console.log("COMPUTE(I) query : ", this.query);
         return this.data;
 
     }
 
     format_query() {
 
-        const default_query = { state: 'US', year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
+        const default_query = { state: 'Alabama', year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 
@@ -132,6 +134,13 @@ module.exports = class CollectorIncomes {
 
     }
 
+    httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+
     extract_data(csv_name) {
         
         try {
@@ -147,6 +156,7 @@ module.exports = class CollectorIncomes {
 
             // VERSION FETCH
             var csv_fetch = undefined;
+            /*
             fetch("http://91.168.117.237:1905/incomes.csv")
             .then(res => res.json())
             .then(data => {
@@ -165,6 +175,13 @@ module.exports = class CollectorIncomes {
             .catch(rejected => {
                 console.log(rejected);
             });
+            */
+            const resp = this.httpGet("http://91.168.117.237:1905/incomes.csv");
+            const csvjson =  JSON.parse(resp);
+            var output = this.formating_wages_from_csv(csvjson);
+            return output;
+            //console.log(output);
+            //return output;
             //console.log(csv_fetch);
         
         } catch(e){

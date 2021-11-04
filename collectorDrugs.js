@@ -4,6 +4,7 @@ const Papa = require("papaparse");
 const { addAbortSignal } = require('stream');
 var _ = require("underscore");
 const fetch = require("cross-fetch");
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = class CollectorDrugs {
     
@@ -133,6 +134,13 @@ module.exports = class CollectorDrugs {
 
     }
 
+    httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+
     extract_data(csv_name) {
         
         try {
@@ -148,6 +156,7 @@ module.exports = class CollectorDrugs {
             /**/
             
             // VERSION FETCH
+            /*
             var csv_fetch = undefined;
             fetch("http://91.168.117.237:1905/" + csv_name + ".csv")
             .then(res => res.json())
@@ -168,6 +177,11 @@ module.exports = class CollectorDrugs {
                 console.log(rejected);
             });
             //console.log(csv_fetch);
+            */
+            const resp = this.httpGet("http://91.168.117.237:1905/" + csv_name + ".csv");
+            const csvjson =  JSON.parse(resp);
+            var output = this.formating_drugs_from_csv(csv_name, csvjson);
+            return output;
         
         } catch(e){
             console.error(e);
