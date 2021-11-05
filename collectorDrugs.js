@@ -2,13 +2,13 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const Papa = require("papaparse");
 const { addAbortSignal } = require('stream');
-var _ = require("underscore");
+const _ = require("underscore");
 const fetch = require("cross-fetch");
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const drugsURL = "http://91.168.117.237:1905/";
 
 module.exports = class CollectorDrugs {
     
-
     constructor(query) {
         this.query = query;
         //TO DO MERGE
@@ -320,7 +320,7 @@ module.exports = class CollectorDrugs {
             });
             //console.log(csv_fetch);
             */
-            const resp = this.httpGet("http://91.168.117.237:1905/" + csv_name + ".csv");
+            const resp = this.httpGet(drugsURL + csv_name + ".csv");
             const csvjson =  JSON.parse(resp);
             var output = this.formating_drugs_from_csv(csv_name, csvjson);
             return output;

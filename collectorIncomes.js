@@ -2,13 +2,13 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const Papa = require("papaparse");
 const { addAbortSignal } = require('stream');
-var _ = require("underscore");
+const _ = require("underscore");
 const fetch = require("cross-fetch");
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const incomeURL = "http://91.168.117.237:1905/";
 
 module.exports = class CollectorIncomes {
     
-
     constructor(query) {
         this.query = query;
         this.data = this.extract_data('incomes');
@@ -175,7 +175,7 @@ module.exports = class CollectorIncomes {
                 console.log(rejected);
             });
             */
-            const resp = this.httpGet("http://91.168.117.237:1905/incomes.csv");
+            const resp = this.httpGet(incomeURL + "incomes.csv");
             const csvjson =  JSON.parse(resp);
             var output = this.formating_wages_from_csv(csvjson);
             return output;
