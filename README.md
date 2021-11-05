@@ -323,3 +323,13 @@ Renvoie :
     }
 }
 ```
+
+
+
+## Pour aller plus loin ...
+
+Concernant l'API, nous souhaitions également ajouter des filtres sur les types de statistiques pour chaque catégorie de drogues, à savoir: premier usage, risques de consommation, consommation mois ou année passée, etc... 
+
+Avec plus de temps devant nous, nous aurions pris le temps de faire une interface client générant automatiquement l'URL de requête, après sélection des filtres sur menus déroulants et boutons à cocher.
+
+Nous aurions pu utiliser les fichiers de données générés pour construire des visualisations, améliorant l'aspect de croisement d'informations. 
