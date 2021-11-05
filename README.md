@@ -19,8 +19,8 @@ Le groupe s'est séparé en sous-groupes pour avancer en parallèle sur les sous
 Le format RDF est un modèle de données standardisé developpé par le W3C, c'est le language de base du Web Sémantique. Il permet la description de ressources Webs ainsi que de leurs métadonnées et il possède plusieurs syntaxes. 
 Pour la suite nous avons choisi de travailler avec RDF/XML.
 
-Etant donné qu'aucun vocabulaire rdf existant ne corresponds à nos données, nous avaons dans un premier temps défini le vocabulaire rdf nécessaire. Nous avons définis des classes, des sous-classe, et des propriétés pour ces dernières.
-Tout d'abord nous avons construit un diagrmame de classe basé sur la méthode UML. Nos différentres classes ainsi que leurs interactions sont réprésentés sur la figure ci dessous.
+Etant donné qu'aucun vocabulaire RDF existant ne correspond à nos données, nous avons dans un premier temps défini le vocabulaire RDF nécessaire. Nous avons défini des classes, des sous-classes, et des propriétés pour ces dernières.
+Tout d'abord nous avons construit un diagrmame de classe basé sur la méthode UML. Nos différentes classes ainsi que leurs interactions sont réprésentées sur la figure ci dessous:
 
 IMG dIAGRAMme
 
