@@ -77,10 +77,10 @@ module.exports = class CollectorMega {
         var s = `<?xml version="1.0" encoding="UTF-8"?>`;
         Object.entries(data).forEach(([state, years]) => {
             console.log(state);
-            s += `<state id=${state}>`;
+            s += `<etat id=${state}>`;
             Object.entries(years).forEach(([year, data]) => {
                 console.log(year);
-                s += `<year id=${year}>`;
+                s += `<has_annee id=${year}>`;
                 if (path == "all") {
                     console.log(Object.keys(data));
                     s += that.#wages_to_xml(data.wages);
@@ -99,27 +99,99 @@ module.exports = class CollectorMega {
         return s;
     }
 
-    #parse_xml(txt) {
-        var xmlDoc = undefined;
+    #wages_to_rdf(year, quarter, data) {
+        var s = "<rdfs:salaire>";
 
-        // if (window.DOMParser) {
-        //     parser = new DOMParser();
-        //     xmlDoc = parser.parseFromString(s, "text/xml");
-        // } else {
-        //     xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-        //     xmlDoc.async = false;
-        //     xmlDoc.loadXML(s);
-        // }
+        s += `<rdfs:has_trimestre>${quarter}</rdfs:has_trimestre>`;
 
-        // const parser = new DOMParser();
-        // xmlDoc = parser.parseFromString(txt, "text/xml");
+        s += `<rdfs:has_annee>${year}</rdfs:has_annee>`;
+        Object.entries(data).forEach(([col_name, value]) => {
+            s += `<rdfs:has_${col_name}>${value}</rdfs:has_${col_name}>`;
+        });
 
-        return xmlDoc;
+        s += "</rdfs:salaire>";
+        return s;
+    }
+
+    #drugs_to_rdf(year, age, drug, data) {
+        var s = "<rdfs:drogue>";
+        s += `<rdfs:has_nomDrogue>${drug}</rdfs:has_nomDrogue>`;
+        s += `<rdfs:has_categorie_age>${age}</rdfs:has_categorie_age>`;
+
+        s += `<rdfs:has_annee>${year}</rdfs:has_annee>`;
+        Object.entries(data).forEach(([col_name, value]) => {
+            s += `<rdfs:has_${col_name}>${value}</rdfs:has_${col_name}>`;
+        });
+
+        s += "</rdfs:drogue>";
+        return s;
     }
 
     #to_rdf(data) {
-        return this.#to_xml(data);
+        console.log("TO RDF");
+        const that = this;
+        const path = this.path;
+
+        var s = `<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema">`;
+        Object.entries(data).forEach(([state, years]) => {
+            console.log(state);
+            s += `<rdfs:etat>`;
+            s += `<rdfs:has_nomEtat>${state}</rdfs:has_nomEtat>`;
+
+            if (path == "all") {
+
+                s += `<rdfs:has_collectSalaire>`;
+                Object.entries(years).forEach(([year, data]) => {
+                    Object.entries(data.wages).forEach(([quarter, data]) => {
+                        s += that.#wages_to_rdf(year, quarter, data);
+                    });
+                });
+                s += `</rdfs:has_collectSalaire>`;
+
+                s += `<rdfs:has_collectDrogue>`;
+                Object.entries(years).forEach(([year, data]) => {
+                    Object.entries(data.drugs).forEach(([age, drugs]) => {
+                        Object.entries(drugs).forEach(([drug, data]) => {
+                            s += that.#drugs_to_rdf(year, age, drug, data);
+                        });
+                    });
+                });
+                s += `</rdfs:has_collectDrogue>`;
+
+            } else if (path == "drugs") {
+
+                s += `<rdfs:has_collectSalaire>`;
+                Object.entries(years).forEach(([year, data]) => {
+                    Object.entries(data.wages).forEach(([quarter, data]) => {
+                        s += that.#wages_to_rdf(year, quarter, data);
+                    });
+                });
+                s += `</rdfs:has_collectSalaire>`;
+
+            } else if (path == "wages") {
+
+                s += `<rdfs:has_collectDrogue>`;
+                Object.entries(years).forEach(([year, data]) => {
+                    Object.entries(data.drugs).forEach(([age, drugs]) => {
+                        Object.entries(drugs).forEach(([drug, data]) => {
+                            s += that.#drugs_to_rdf(year, age, drug, data);
+                        });
+                    });
+                });
+                s += `</rdfs:has_collectDrogue>`;
+
+            }
+
+            s += "</rdfs:etat>";
+        });
+
+        s += `</rdf:RDF>`;
+        return s;
     }
+
+    // #to_rdf(data) {
+    //     return this.#to_xml(data);
+    // }
 
     #format_data(type, data) {
         if (type == "xml") {
