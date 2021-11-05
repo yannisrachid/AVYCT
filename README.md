@@ -25,7 +25,7 @@ Tout d'abord nous avons construit un diagrmame de classe basé sur la méthode U
 
 ![DiagrammeRDF](assets/Diagramme_UML_RDF.png)
 
-Voici notre vocabulaire est disponible dans le fichier */assets/vocabulary.rdf*.
+Notre vocabulaire est disponible dans le fichier */assets/vocabulary.rdf*.
 
 
 # API
