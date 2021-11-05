@@ -51,7 +51,7 @@ app.get("/:path", function (req, res) {
 
 app.get("/rdf", function (req, res) {
   try {
-    const rdf = fs.readFileSync("my_rdf.rdf", "utf-8");
+    const rdf = fs.readFileSync("assets/vocabulary.rdf", "utf-8");
     res.status(200);
     res.send(rdf);  
   } catch (e) {
