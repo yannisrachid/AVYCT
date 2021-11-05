@@ -60,7 +60,7 @@ module.exports = class CollectorIncomes {
 
     format_query() {
 
-        const default_query = { state: undefined, year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
+        const default_query = { state: 'Alabama', year: undefined, quarter: undefined, metric: ["personal_income", "population", "per_capita_personal_income"], type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 

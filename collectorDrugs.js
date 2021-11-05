@@ -85,7 +85,7 @@ module.exports = class CollectorDrugs {
 
     format_query() {
 
-        const default_query = { state: 'Total U.S.', year: undefined, age: ['12+', '12-17','18+', '18-25','26+'], estimate: undefined, drug: ['alcohol','cigarette','cocaine','marijuana','heroin','illicit_drug','substance','pain_reliever','tobacco_product','depressive','methamphetamine','suicide','mental'], type: "json"};
+        const default_query = { state: 'Alabama', year: undefined, age: ['12+', '12-17','18+', '18-25','26+'], estimate: undefined, drug: ['alcohol','cigarette','cocaine','marijuana','heroin','illicit_drug','substance','pain_reliever','tobacco_product','depressive','methamphetamine','suicide','mental'], type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 
