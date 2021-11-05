@@ -11,35 +11,33 @@ const PORT = process.env.PORT || 3000 ;
 const collect = (res, path, type, query) => { 
   try {
     var collector = new CollectorMega(path, type, query);
-    // console.log(collector);
     const data = collector.compute();
-    // console.log(data);
     return data;
   } catch (e) {
     return {error : "Too bad : " + e.toString()};
   }
 }
 
-app.get("/", function (req, res) {
+app.get("/:path", function (req, res) {
   console.log(req.query)
   res.format({
     "application/json" : () => {
-      console.log("JSON");
-      const data = collect(res, "all", "json", req.query);
+      // console.log("JSON");
+      const data = collect(res, req.params.path, "json", req.query);
       res.status(("error" in data) ? 400 : 200);
       res.json(data);
     },
 
     "application/xml" : () => {
-      console.log("XML");
-      const data = collect(res, "all", "xml", req.query);
+      // console.log("XML");
+      const data = collect(res, req.params.path, "xml", req.query);
       res.status((typeof data !== "string") ? 400 : 200);
       res.send(data);
     },
 
     "application/rdf+xml" : () => {
-      console.log("RDF/XML");
-      const data = collect(res, "all", "rdf", req.query);
+      // console.log("RDF/XML");
+      const data = collect(res, req.params.path, "rdf", req.query);
       res.status((typeof data !== "string") ? 400 : 200);
       res.send(data);
     },
@@ -61,14 +59,6 @@ app.get("/rdf", function (req, res) {
     res.send("Error during file parse.");
   }
 });
-
-  // var collector = new CollectorMega("all", "json", req.query);
-  // console.log(collector);
-  // const data = collector.compute();
-
-  // res.status(("error" in data) ? 400 : 200);
-  // res.send(data);
-
 
 app.listen(PORT, function () {
   console.log('Serveur sur le port :' + PORT);
