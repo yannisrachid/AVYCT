@@ -22,10 +22,11 @@ Pour la suite nous avons choisi de travailler avec RDF/XML.
 Etant donné qu'aucun vocabulaire RDF existant ne correspond à nos données, nous avons dans un premier temps défini le vocabulaire RDF nécessaire. Nous avons défini des classes, des sous-classes, et des propriétés pour ces dernières.
 Tout d'abord nous avons construit un diagrmame de classe basé sur la méthode UML. Nos différentes classes ainsi que leurs interactions sont réprésentées sur la figure ci dessous:
 
-IMG dIAGRAMme
 
-Voici notre vocabulaire :
-mot_rdf.rdf
+![DiagrammeRDF](assets/Diagramme_UML_RDF.png)
+
+Voici notre vocabulaire est disponible dans le fichier */assets/vocabulary.rdf*.
+
 
 # API
 L'API peut récolter et croiser deux différents types de données, en passant par les chemins suivants :
