@@ -29,7 +29,7 @@ module.exports = class CollectorMega {
 
         Object.entries(drugs).forEach(([state, years]) => {
             Object.entries(years).forEach(([year, d]) => {
-                data[state][year].drugs = d;
+                if (state !== "Total U.S.") data[state][year].drugs = d;
             });
         });
 
