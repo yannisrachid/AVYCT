@@ -10,13 +10,13 @@ Le groupe s'est séparé en sous-groupes pour avancer en parallèle sur les sous
 - Formater les données (collecteurs de données)
 - Application les filtres
 - Gestion des différents formats de sorties (JSON, XML, RDF)
-- Mise en relation des différentes entitées crées
+- Mise en relation des différentes entitées créées
 
 
 
 # RDF
 
-Le format RDF est un modèle de données standardisé developpé par le W3C, c'est le language de base du Web Sémantique. Il permet la description de ressources Webs ainsi que de leurs métadonnées et il possède plusieurs syntaxes. 
+Le format RDF est un modèle de données standardisé developpé par le W3C, c'est le langage de base du Web Sémantique. Il permet la description de ressources Webs ainsi que de leurs métadonnées et possède plusieurs syntaxes. 
 Pour la suite nous avons choisi de travailler avec RDF/XML.
 
 Etant donné qu'aucun vocabulaire RDF existant ne correspond à nos données, nous avons dans un premier temps défini le vocabulaire RDF nécessaire. Nous avons défini des classes, des sous-classes, et des propriétés pour ces dernières.
