@@ -1,3 +1,7 @@
+// const JSDOM = require("jsdom");
+// const DOMParser = require("xmldom").DOMParser;
+// const parseString = require('xml2js').parseString;
+
 const collectorIncomes = require("./collectorIncomes");
 const collectorDrugs = require("./collectorDrugs");
 
@@ -38,11 +42,12 @@ module.exports = class CollectorMega {
             s += `<quarter id=${quarter}>`;
             Object.entries(data).forEach(([key, value]) => {
                 key = key.split(' ')[0];
-                s += `<"${key}">${value}</${key}>`;
+                s += `<${key}>${value}</${key}>`;
             });
             s += "</quarter>";
         });
         s += "</wages>";
+        // console.log("XML/WAGES : ", s);
         return s;
     }
 
@@ -61,32 +66,55 @@ module.exports = class CollectorMega {
             s += "</age>";
         });
         s += "</drugs>";
+        // console.log("XML/DRUGS : ", s);
         return s;
     }
 
     #to_xml(data) {
         const that = this;
         const path = this.path;
+
         var s = `<?xml version="1.0" encoding="UTF-8"?>`;
         Object.entries(data).forEach(([state, years]) => {
+            console.log(state);
             s += `<state id=${state}>`;
             Object.entries(years).forEach(([year, data]) => {
+                console.log(year);
                 s += `<year id=${year}>`;
                 if (path == "all") {
-                    s += that.#wages_to_xml(data.Wages);
-                    s += that.#drugs_to_xml(data.Drugs);
+                    console.log(Object.keys(data));
+                    s += that.#wages_to_xml(data.wages);
+                    s += that.#drugs_to_xml(data.drugs);
                 } else if (path == "wages") {
                     s += that.#wages_to_xml(data);
                 } else if (path == "drugs") {
                     s += that.#drugs_to_xml(data);
                 }
-
                 s += "</year>";
             });
 
             s += "</state>";
         });
+
         return s;
+    }
+
+    #parse_xml(txt) {
+        var xmlDoc = undefined;
+
+        // if (window.DOMParser) {
+        //     parser = new DOMParser();
+        //     xmlDoc = parser.parseFromString(s, "text/xml");
+        // } else {
+        //     xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+        //     xmlDoc.async = false;
+        //     xmlDoc.loadXML(s);
+        // }
+
+        // const parser = new DOMParser();
+        // xmlDoc = parser.parseFromString(txt, "text/xml");
+
+        return xmlDoc;
     }
 
     #to_rdf(data) {
@@ -95,6 +123,8 @@ module.exports = class CollectorMega {
 
     #format_data(type, data) {
         if (type == "xml") {
+            data = this.#to_xml(data);
+            // data = this.#parse_xml(data);
             // data = JSON.stringify(data);
             // console.log("OUT : ", typeof data);
         } else if (type == "rdf") {
@@ -109,7 +139,7 @@ module.exports = class CollectorMega {
         if (this.path == "all") {
             const dataWages = this.collectIncomes.compute();
             const dataDrugs = this.collectDrugs.compute();
-            console.log(dataWages, dataDrugs);
+            // console.log(dataWages, dataDrugs);
             data = this.#data_merger(dataWages, dataDrugs);
         } else if (this.path == "wages") {
             data = this.collectWages.compute();
