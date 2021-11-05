@@ -85,7 +85,7 @@ module.exports = class CollectorDrugs {
 
     format_query() {
 
-        const default_query = { state: 'Total U.S.', year: undefined, age: ['12+95L', '12+95U', '12+Estimate', '12-17-95L', '12-17-95U', '12-17-Estimate', '18+95L', '18+95U', '18+Estimate', '18-25-95L', '18-25-95U', '18-25-Estimate', '26+95L', '26+95U', '26+Estimate'], drug: ['alcohol','cigarette','cocaine','marijuana','heroin','illicit_drug','substance','pain_reliever','tobacco_product','depressive','methamphetamine','suicide','mental'], type: "json"};
+        const default_query = { state: 'Alabama', year: undefined, age: ['12+', '12-17','18+', '18-25','26+'], estimate: undefined, drug: ['alcohol','cigarette','cocaine','marijuana','heroin','illicit_drug','substance','pain_reliever','tobacco_product','depressive','methamphetamine','suicide','mental'], type: "json"};
 
         this.query = Object.assign(default_query, this.query);
 
@@ -125,6 +125,148 @@ module.exports = class CollectorDrugs {
         // AGE
         if (typeof this.query.age!= "object" && this.query.age.includes(',')) {
             this.query.age = this.query.age.split(',');
+        }
+
+        // ESTIMATE
+        if (typeof this.query.age == "string") {
+
+            if (this.query.age.includes(' ')) {
+                this.query.age = this.query.age.replace(" ", "");
+            }
+            
+            if (this.query.estimate == undefined) {
+
+                var lst_est = ['Estimate', '95L', '95U'];
+                var tbl=[]
+
+                if (!this.query.age.includes('-')) {
+                    Object.values(lst_est).forEach(value => {
+                        tbl.push(this.query.age+'+'+value);
+                    });
+
+                } else {   
+                    Object.values(lst_est).forEach(value => {
+                        tbl.push(this.query.age+'-'+value);
+                    });
+                }
+
+                this.query.age = tbl;
+
+            } else if (this.query.estimate == "true") {
+                
+                if (!this.query.age.includes('-')) {
+
+                    this.query.age = this.query.age+'+'+'Estimate';
+
+                } else {
+
+                    this.query.age = this.query.age+'-Estimate';
+                }
+
+            } else {
+
+                var lst_est = ['95L', '95U'];
+                var tbl=[]
+
+                if (!this.query.age.includes('-')) {
+                    Object.values(lst_est).forEach(value => {
+                        tbl.push(this.query.age+'+'+value);
+                    });
+
+                } else {   
+                    Object.values(lst_est).forEach(value => {
+                        tbl.push(this.query.age+'-'+value);
+                    });
+                }
+
+                this.query.age = tbl;
+            }
+
+        // else if (typeof this.query.age == "object")
+        } else {
+
+            if (this.query.estimate == undefined) {
+
+                var lst_est = ['Estimate', '95L', '95U'];
+                var tbl=[]
+
+                
+                Object.values(this.query.age).forEach(value_q => {
+
+                    if (value_q.includes(' ')) {
+                        value_q = value_q.replace(" ", "");
+                    }
+
+                    if (!value_q.includes('-')) {
+                        Object.values(lst_est).forEach(value => {
+                            tbl.push(value_q+'+'+value);
+                        });
+
+                    } else {   
+                        Object.values(lst_est).forEach(value => {
+                            tbl.push(value_q+'-'+value);
+                        });
+                    }
+                });
+
+                this.query.age = tbl;
+
+            } else if (this.query.estimate == "true") {
+
+                //query_age = ['12+', '12-17']
+
+                var tbl = [];
+                
+                Object.values(this.query.age).forEach(value_q => {
+
+                    if (value_q.includes(' ')) {
+                        value_q = value_q.replace(" ", "");
+                    }
+
+                    if (!value_q.includes('-')) {
+
+                        tbl.push(value_q+'+'+'Estimate');
+
+                    } else {
+
+                        tbl.push(value_q+'-Estimate');   
+                    }
+
+                });
+
+                console.log(tbl);
+
+                this.query.age = tbl;
+
+            } else if (this.query.estimate == "false") {
+
+                var lst_est = ['95L', '95U'];
+                var tbl=[]
+
+                //query_age = ['12+', '12-17']
+
+                Object.values(this.query.age).forEach(value_q => {
+
+                    if (value_q.includes(' ')) {
+                        value_q = value_q.replace(" ", "");
+                    }
+
+                    if (!value_q.includes('-')) {
+                        Object.values(lst_est).forEach(value => {
+                            tbl.push(value_q+'+'+value);
+                        });
+
+                    } else {   
+                        Object.values(lst_est).forEach(value => {
+                            tbl.push(value_q+'-'+value);
+                        });
+                    }
+
+                });
+
+                this.query.age = tbl;
+            }
+
         }
 
         // DRUGS
