@@ -142,7 +142,7 @@ module.exports = class CollectorMega {
             // console.log(dataWages, dataDrugs);
             data = this.#data_merger(dataWages, dataDrugs);
         } else if (this.path == "wages") {
-            data = this.collectWages.compute();
+            data = this.collectIncomes.compute();
         } else if (this.path == "drugs") {
             data = this.collectDrugs.compute();
         }
