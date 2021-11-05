@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema"
+>
+
+<!-- Classes et sous-classes-->
+
+  <rdfs:Class rdf:about="http://91.168.117.237:1905#Etat">
+    <rdfs:label xml:lang="fr">Etat</rdfs:label>
+    <rdfs:comment xml:lang="fr">Correspond au nom de l'état(USA)</rdfs:comment> 
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="http://91.168.117.237:1905#Stat">
+    <rdfs:label xml:lang="fr">Stat</rdfs:label>
+    <rdfs:comment xml:lang="fr">Regroupe les données récoltées sur la consommation de drogues et le salaire par année et par état </rdfs:comment>
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="http://91.168.117.237:1905#Drogue">
+    <rdfs:label xml:lang="fr">Drogue</rdfs:label>
+    <rdfs:comment xml:lang="fr">c'est l'ensemble des données sur les drogues les plus consommées aux états unis par année</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Stat"/>
+  </rdfs:Class>
+
+  <rdfs:Class rdf:about="http://91.168.117.237:1905#Salaire">
+    <rdfs:label xml:lang="fr">Salaire</rdfs:label>
+    <rdfs:comment xml:lang="fr">Données sur le montant des salaires trimestriels par année et par état</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Stat"/>
+  </rdfs:Class>
+
+  <!-- Properties -->
+
+  <!-- rajouter var URL comment? -->
+  
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_nomEtat">
+    <rdfs:label xml:lang="fr">has_nomEtat</rdfs:label>
+    <rdfs:comment xml:lang="fr"> Représente le nom de chaque état des USA  </rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Etat">
+    <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Salaire"/> 
+  </rdfs:Property>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_CollectDrogue">
+    <rdfs:label xml:lang="fr">has_CollectDrogue</rdfs:label>
+    <rdfs:comment xml:lang="fr"> Représente l'ensemnble des données de la classe drogue</rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Etat"> 
+    <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Drogue"/>
+  </rdfs:Property>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_CollectSalaire">
+    <rdfs:label xml:lang="fr">has_CollectSalaire</rdfs:label>
+    <rdfs:comment xml:lang="fr"> Représente l'ensemnble des données de la classe salaire </rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Etat">
+  <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Salaire"/>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_nomDrogue">
+    <rdfs:label xml:lang="fr">has_nomDrogue</rdfs:label>
+    <rdfs:comment xml:lang="fr"> Représente le nom de la statistique relevée pour chacune des drogue par état et par année </rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Drogue">
+  <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Drogue"/>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_categorie_age">
+    <rdfs:label xml:lang="fr">has_categorie_age</rdfs:label>
+    <rdfs:comment xml:lang="fr">Groupe d'individus présentant le même âge</rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Drogue">
+  <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Drogue"/>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_statDrogue">
+    <rdfs:label xml:lang="fr">has_statDrogue</rdfs:label>
+    <rdfs:comment xml:lang="fr"> Représente la valeur de la statistique relevée pour chacune des drogue par état et par année </rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Drogue">
+    <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Drogue"/>
+  </rdfs:Property>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_annee">
+    <rdfs:label xml:lang="fr">has_annee</rdfs:label>
+    <rdfs:comment xml:lang="fr">se refère à l'année pour laquelle l'esemble des statistiques ont été relevées par état et pour chacune des drogues</rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Stat">
+    <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Salaire"/>
+  <rdfs:type>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_statsSalaire">
+    <rdfs:label xml:lang="fr">has_statsSalaire</rdfs:label>
+    <rdfs:comment xml:lang="fr">Données sur le montant des salaires dans chaque état et pour une année donnée  </rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Salaire">
+    <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Salaire"/>
+  </rdfs:Property>
+
+  <rdfs:Property rdf:about="http://91.168.117.237:1905#has_trimestre">
+    <rdfs:label xml:lang="fr">has_trimestre</rdfs:label>
+    <rdfs:comment xml:lang="fr">se refère au trimestre pour laquelle l'esemble des statistiques sur les salaires ont été relevées par état et par année</rdfs:comment>
+    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Salaire">
+    <rdfs:range rdf:resource="https://bills-and-pills.herokuapp.com#Salaire"/>
+  <rdfs:type>
+
+</rdf:RDF>
