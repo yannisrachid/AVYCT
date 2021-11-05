@@ -1,158 +1,139 @@
-  # Bills and Pills
-*Projet Open Data*
+# <center> Bills and Pills </center>
+*<center> Projet Open Data </center>*
 
-Notre projet est de créer une API (en Node.js) permettant de récolter des données sur la consommation de drogues et les salaires moyens aux États-unis, de l'année 2013 jusqu'à 2019. Les données ont été récoltées sur le site du [Bureau of Economic Analysis](https://www.bea.gov/) ainsi que sur le site des [Substance Abuse and Mental Health Service Administration (SAMHSA)](https://www.samhsa.gov/).
 
-<!-- Une partie de l'équipe s'est penché sur le reformatage des données, tandis que les autres ont commencé la construction de l'API.  -->
+L'objectif de notre projet est de créer une API (en Node.js) permettant de récolter des données sur la consommation de drogues et les salaires moyens aux États-unis, de l'année 2013 à l'année 2019. Les données ont été récoltées sur le site du [Bureau of Economic Analysis (BEA)](https://www.bea.gov/) ainsi que sur le site des [Substance Abuse and Mental Health Service Administration (SAMHSA)](https://www.samhsa.gov/).
+
+# Organisation 
+
+Le groupe s'est séparé en sous-groupes pour avancer en parallèle sur les sous-tâches majeures, à savoir:
+- Formater les données (collecteurs de données)
+- Application les filtres
+- Gestion des différents formats de sorties (JSON, XML, RDF)
+- Mise en relation des différentes entitées crées
+
+
 
 # RDF
 
+Le format RDF est un modèle de données standardisé developpé par le W3C, c'est le language de base du Web Sémantique. Il permet la description de ressources Webs ainsi que de leurs métadonnées et il possède plusieurs syntaxes. 
+Pour la suite nous avons choisi de travailler avec RDF/XML.
+
+Etant donné qu'aucun vocabulaire rdf existant ne corresponds à nos données, nous avaons dans un premier temps défini le vocabulaire rdf nécessaire. Nous avons définis des classes, des sous-classe, et des propriétés pour ces dernières.
+Tout d'abord nous avons construit un diagrmame de classe basé sur la méthode UML. Nos différentres classes ainsi que leurs interactions sont réprésentés sur la figure ci dessous.
+
+IMG dIAGRAMme
+
+Voici notre vocabulaire :
+mot_rdf.rdf
+
 # API
-Il est possible d'obtenir deux types de données différentes, en passant par les chemins suivants :
-- wages : les salaires moyens
-- drugs : la consommation de drogues estimée
-- all : permet d'obtenir le croisement des deux types de données
+L'API peut récolter et croiser deux différents types de données, en passant par les chemins suivants :
+- /wages : les salaires moyens
+- /drugs : la consommation de drogues estimée
+- /all : permet d'obtenir le croisement des deux types de données précédents
 
-Nous allons voir plus en détail comment manipuler l'API et appliquer des filtres aux requêtes.
+Nous verrons par la suite pour chaque chemin, comment manipuler plus en détail l'API et appliquer différents niveaux de filtres aux requêtes.
 
-Pour tout type de requête il est possible de choisir le format des données renvoyées. Il suffit d'ajouter dans la requête un attribut *type* suivant le type de format voulu, parmis XML, JSON et RDF. Si aucun type n'est spécifié les données seront envoyées dans le format JSON.
+## Formats de Sortie
+Pour tout type de requête il est possible de choisir le format des données renvoyées. Il suffit d'ajouter dans la requête un attribut **type** pour le type de format voulu, parmis XML, JSON et RDF. 
 
-## Wages 
-Si aucun filtre n'est demandé, l'API renvoie les salaires moyens de tous les États-Unis, ainsi que les salaires moyens pour chaque partie du pays (Nord, Sud, ...).
+NB: Si aucun type n'est spécifié, les données seront envoyées dans le format JSON.
 
-Filtres :
-- year : applique un filtre sur les années spécifiées
+## Premier chemin : */Wages*
+Par défaut, si aucun filtre n'est demandé, l'API renvoie les données de l'état d'Alabama, pour toutes les années entre 2013 et 2019, tous les trimestres, pour chacune des 3 statistiques suivantes: 
+
+- *'Personal income'* : somme des revenus personnels dans l'état, en millions de dollars, corrigée des variations saisonnières
+- *'Population'* : nombre d'habitants de l'état, en milieu de période
+- *'Per capita personal income'* : Revenu moyen par individu de l'Etat, en dollars
+
+Filtres applicables pour la sélection des données :
+- **state** : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule
+- **year** : applique un filtre sur les années spécifiées, entre 2013 et 2019:
   - "20XX" : pour obtenir sur une année
   - "20XX-20XX" : pour obtenir une plage d'années
   - "20XX,20XX" : pour obtenir des années spécifiques
-- state : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule, si aucun état n'est spécifié une valeur pour la globalité des états-unis est donnée, si la valeur *all* est donnée un résultat pour chaque état est rendu
-- quarters : applique un filtre sur les trimestre spécifiés, pour obtenir plusieurs trimestres il faut les séparer par une virgule -parmis : [Q1, Q2, Q3, Q4]-
+- **quarter** : applique un filtre sur le(s) trimestre(s) spécifié(s), parmi [Q1, Q2, Q3, Q4]:
   - "QX" : pour obtenir un trimestre
   - "QX-QX" : pour obtenir une plage de trimestres
   - "QX,QX" : pour obtenir des trimestres spécifiques
-- metric : pour obtenir seulement les métriques spécifiées, pour obtenir plusieurs métriques il faut les séparer par une virgule -parmis : [personal_income, population, per_capita_personal_income]-
+- **metric** : pour obtenir une ou plusieurs métriques spécifiques, il faut les séparer par une virgule, parmi :
+  - *personal_income* 
+  - *population*
+  - *per_capita_personal_income*
 
 __Exemple :__
 
+Je souhaite récolter les données de l'état de Washington et Californie, pour 2015 et 2017 au troisème trimestre:
 ```
-/wages?year=2015,2017&state=Washington,California&quarters=Q3
+/wages?state=Washington,California&year=2015,2017&quarter=Q3
 ```
 Renvoie :
 ```json
 {
     "Washington": {
         "2015": {
-            "Q1": {
-                "personal_income": "375275.0",
-                "population": "7127237",
-                "per_capita_personal_income": "52654"
-            },
-            "Q2": {
-                "personal_income": "379570.6",
-                "population": "7153455",
-                "per_capita_personal_income": "53061"
-            },
             "Q3": {
                 "personal_income": "383645.8",
                 "population": "7184839",
                 "per_capita_personal_income": "53397"
-            },
-            "Q4": {
-                "personal_income": "386140.9",
-                "population": "7218992",
-                "per_capita_personal_income": "53490"
             }
         },
         "2017": {
-            "Q1": {
-                "personal_income": "419580.3",
-                "population": "7380986",
-                "per_capita_personal_income": "56846"
-            },
-            "Q2": {
-                "personal_income": "423413.0",
-                "population": "7411604",
-                "per_capita_personal_income": "57128"
-            },
             "Q3": {
                 "personal_income": "427814.4",
                 "population": "7441358",
                 "per_capita_personal_income": "57491"
-            },
-            "Q4": {
-                "personal_income": "434326.2",
-                "population": "7467379",
-                "per_capita_personal_income": "58163"
             }
         }
     },
     "California": {
         "2015": {
-            "Q1": {
-                "personal_income": "2084189.7",
-                "population": "38793917",
-                "per_capita_personal_income": "53725"
-            },
-            "Q2": {
-                "personal_income": "2117632.1",
-                "population": "38865317",
-                "per_capita_personal_income": "54486"
-            },
             "Q3": {
                 "personal_income": "2138781.8",
                 "population": "38940551",
                 "per_capita_personal_income": "54924"
-            },
-            "Q4": {
-                "personal_income": "2161117.7",
-                "population": "39008270",
-                "per_capita_personal_income": "55402"
             }
         },
         "2017": {
-            "Q1": {
-                "personal_income": "2288241.5",
-                "population": "39275811",
-                "per_capita_personal_income": "58261"
-            },
-            "Q2": {
-                "personal_income": "2306107.8",
-                "population": "39313978",
-                "per_capita_personal_income": "58659"
-            },
             "Q3": {
                 "personal_income": "2325376.1",
                 "population": "39356311",
                 "per_capita_personal_income": "59085"
-            },
-            "Q4": {
-                "personal_income": "2354852.3",
-                "population": "39389401",
-                "per_capita_personal_income": "59784"
             }
         }
     }
 }
 ```
 
-## Drugs 
-Si aucun filtre n'est demandé, l'API renvoie une estimation de l'utilisation de drogues ainsi qu'un pourcentage, pour différentes tranches d'âge dans tous les États-Unis.
+## Second chemin : */Drugs* 
 
-Filtres :
-- year : applique un filtre sur les années spécifiées
+Ces données correspondent à des estimations de consommation de plusieurs types de drogues dans chaque état. On peut y retrouver des intervalles de confiance et/ou les valeurs estimées.
+Par défaut, si aucun filtre n'est demandé, l'API renvoie les données de l'état d'Alabama, pour toutes les années entre 2013 et 2019, pour toute tranche d'âge, et toute catégorie de drogue.  
+
+
+Filtres applicables pour la sélection des données :
+- **state** : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule
+- **year** : applique un filtre sur les années spécifiées, entre 2013 et 2019:
   - "20XX" : pour obtenir sur une année
   - "20XX-20XX" : pour obtenir une plage d'années
   - "20XX,20XX" : pour obtenir des années spécifiques
-- state : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule, si la valeur *all* est donnée un résultat pour chaque état est rendu
-- estimate : false pour obtenir les intervalles de confiance, true pour obtenir une estimation, si rien n'est spécifié les deux sont retournés
-- age : pour obtenir seulement certaines catégories d'âges -parmis [12-17, 18-25, 26+, 12+, 18+]-
-- drug : pour obtenir seulement les colonnes concernant une drogue en particulier, pour plusieurs drogues il faut les séparer par une virgule -parmis : [alcohol, cigarette, cocaine, marijuana, heroin, illicit_drug, substance, pain_reliever, tobacco_product, depressive, methamphetamine, suicide, mental]-
-- metric : pour obtenir seulement les métriques spécifiées, pour obtenir plusieurs métriques il faut les séparer par une virgule -parmis : [personal_income, population, per_capita_personal_income]-
+- **estimate** : false pour obtenir les intervalles de confiance, true pour obtenir une estimation, si rien n'est spécifié les deux sont retournés
+- **age** : pour obtenir seulement certaines catégories d'âges parmi:
+  - 12-17
+  - 18-25
+  - 12+
+  - 18+
+  - 26+
+- **drug** : pour obtenir seulement les données sur une ou plusieurs catégories de drogue, pour plusieurs drogues, parmi [*alcohol*, *cigarette*, *cocaine*, *marijuana*, *heroin*, *illicit_drug*, *substance*, *pain_reliever*, *tobacco_product*, *depressive*, *methamphetamine*, *suicide*, *mental*] (à séparer par une virgule).
+
 
 
 __Exemple :__
+
+Je souhaite récolter les données estimées  du nombre de consommateurs liés à la Marijuana pour les états de Californie et Washington, en 2016, sur les tranches d'âge des 12-17 ans et plus de 26 ans.
 ```
-/drugs?year=2016&state=California,Washington&drug=marijuana&age=12-17,26+&estimate=true
+/drugs?state=California,Washington&year=2016&drug=marijuana&age=12-17,26+&estimate=true
 ```
 Renvoie :
 ```json
@@ -203,27 +184,41 @@ Renvoie :
     }
 }
 ```
-## All
+## Troisième chemin : */All*
 
-Filtres :
-- year : applique un filtre sur les années spécifiées
+Les données extraites de ce chemin sont le fruit du croisement des deux types de données évoquées précédemment. Pour le même état, la même année, il est possible d'obtenir à la fois les statistiques de revenus et de consommation de drogues. 
+
+
+Filtres applicables pour la sélection des données :
+- **state** : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule
+- **year** : applique un filtre sur les années spécifiées, entre 2013 et 2019:
   - "20XX" : pour obtenir sur une année
   - "20XX-20XX" : pour obtenir une plage d'années
   - "20XX,20XX" : pour obtenir des années spécifiques
-- state : applique un filtre sur les états voulus, pour obtenir plusieurs états il faut les séparer par une virgule, si la valeur *all* est donnée un résultat pour chaque état est rendu
-- quarters : pour obtenir seulement les trimestres spécifiés, pour obtenir plusieurs trimestres il faut les séparer par une virgule -parmis : [Q1, Q2, Q3, Q4]-
+- **quarter** : applique un filtre sur le(s) trimestre(s) spécifié(s), parmi [Q1, Q2, Q3, Q4]:
   - "QX" : pour obtenir un trimestre
   - "QX-QX" : pour obtenir une plage de trimestres
   - "QX,QX" : pour obtenir des trimestres spécifiques
-- estimate : false pour obtenir les pourcentages, true pour obtenir une estimation, si rien n'est spécifié les deux sont retournés
-- age : pour obtenir seulement certaines catégories d'âges -parmis [12-17, 18-25, 26+, 12+, 18+]-
-- drug : pour obtenir seulement les colonnes concernant une drogue en particulier, pour plusieurs drogues il faut les séparer par une virgule -parmis : [Marijuana, Cocaine, Heroin, PainReliever, Alcohol, Tobacco, Illicit, Mental, Suicide]-
+- **metric** : pour obtenir une ou plusieurs métriques spécifiques, il faut les séparer par une virgule, parmi :
+  - *personal_income* 
+  - *population*
+  - *per_capita_personal_income*
+- **estimate** : false pour obtenir les intervalles de confiance, true pour obtenir une estimation, si rien n'est spécifié les deux sont retournés
+- **age** : pour obtenir seulement certaines catégories d'âges parmi:
+  - 12-17
+  - 18-25
+  - 12+
+  - 18+
+  - 26+
+- **drug** : pour obtenir seulement les données sur une ou plusieurs catégories de drogue, pour plusieurs drogues, parmi [*alcohol*, *cigarette*, *cocaine*, *marijuana*, *heroin*, *illicit_drug*, *substance*, *pain_reliever*, *tobacco_product*, *depressive*, *methamphetamine*, *suicide*, *mental*] (à séparer par une virgule).
 
 __Exemple :__
 
+Je souhaite récolter les données pour l'état de Californie en 2015 et en 2018, statistiques de revenus du deuxième au quatrième trimestre, et statistiques de consommations (estimées et intervalle de confiance) de cocaïne et héroïne pour les plus de 26 ans. 
+
 La requête :
 ```
-/all?year=2015,2018&state=California&age=26+&drug=heroin,cocaine&quarter=Q2-Q4
+/all?state=California&year=2015,2018&quarter=Q2-Q4&age=26+&drug=heroin,cocaine
 ```
 Renvoie :
 ```json
