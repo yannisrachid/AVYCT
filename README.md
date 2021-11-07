@@ -2,7 +2,7 @@
 *<center> Projet Open Data </center>*
 
 
-L'objectif de notre projet est de créer une API (en Node.js) permettant de récolter des données sur la consommation de drogues et les salaires moyens aux États-unis, de l'année 2013 à l'année 2019. Les données ont été récoltées sur le site du [Bureau of Economic Analysis (BEA)](https://www.bea.gov/) (Serveur hôte au : http://91.160.67.64:36000/) ainsi que sur le site des [Substance Abuse and Mental Health Service Administration (SAMHSA)](https://www.samhsa.gov/) (Serveur hôte au : http://91.168.117.237:1905/).
+L'objectif de notre projet est de créer une API (en Node.js) permettant de récolter des données sur la consommation de drogues et les salaires moyens aux États-unis, de l'année 2013 à l'année 2019. Les données ont été récoltées sur le site du [Bureau of Economic Analysis (BEA)](https://www.bea.gov/) ainsi que sur le site des [Substance Abuse and Mental Health Service Administration (SAMHSA)](https://www.samhsa.gov/).
 
 # Organisation 
 
@@ -11,8 +11,6 @@ Le groupe s'est séparé en sous-groupes pour avancer en parallèle sur les sous
 - Application les filtres
 - Gestion des différents formats de sorties (JSON, XML, RDF)
 - Mise en relation des différentes entitées créées
-
-
 
 # RDF
 
@@ -29,6 +27,8 @@ Notre vocabulaire est disponible dans le fichier */assets/vocabulary.rdf*.
 
 
 # API
+L'API est disponible à l'adresse suivante : https://bills-and-pills.herokuapp.com/
+
 L'API peut récolter et croiser deux différents types de données, en passant par les chemins suivants :
 - /wages : les salaires moyens
 - /drugs : la consommation de drogues estimée

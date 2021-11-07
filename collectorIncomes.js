@@ -5,7 +5,9 @@ const { addAbortSignal } = require('stream');
 const _ = require("underscore");
 const fetch = require("cross-fetch");
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const incomeURL = "http://91.168.117.237:1905/";
+
+const incomeURL = "http://91.160.67.64:36000/";
+// const incomeURL = "http://91.168.117.237:1905/";
 
 module.exports = class CollectorIncomes {
     
@@ -15,7 +17,8 @@ module.exports = class CollectorIncomes {
     }
 
     compute() {
-        const that = this;
+        // const that = this;
+        console.log("COMPUTE(Incomes) : ", this.data);
         this.format_query();
 
         if (this.query.state !== undefined) this.data = _.pick(this.data, this.query.state);

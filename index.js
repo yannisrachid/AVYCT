@@ -14,7 +14,7 @@ const collect = (res, path, type, query) => {
     const data = collector.compute();
     return data;
   } catch (e) {
-    return {error : "Too bad : " + e.toString()};
+    return {error : e.toString()};
   }
 }
 

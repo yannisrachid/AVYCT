@@ -36,7 +36,7 @@
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_nomEtat">
     <rdfs:label xml:lang="fr">has_nomEtat</rdfs:label>
     <rdfs:comment xml:lang="fr"> Représente le nom de chaque état des USA  </rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Etat">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Etat">
     <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"/> 
   </rdfs:Property>
 
@@ -50,7 +50,7 @@
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_CollectSalaire">
     <rdfs:label xml:lang="fr">has_CollectSalaire</rdfs:label>
     <rdfs:comment xml:lang="fr"> Représente l'ensemnble des données de la classe salaire </rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Etat">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Etat">
   <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"/>
 
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_nomDrogue">
@@ -267,35 +267,35 @@
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_annee">
     <rdfs:label xml:lang="fr">has_annee</rdfs:label>
     <rdfs:comment xml:lang="fr">se refère à l'année pour laquelle l'esemble des statistiques ont été relevées par état et pour chacune des drogues</rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Stat">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Stat">
     <rdfs:range rdf:resource="https://www.w3.org/2002/07/owl#hasValue"/>
   <rdfs:type>
 
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_population">
     <rdfs:label xml:lang="fr">population</rdfs:label>
     <rdfs:comment xml:lang="fr">Données sur le montant nombre d'habitant dans chaque état et pour une année donnée  </rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Salaire">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Salaire">
     <rdfs:range rdf:resource="https://www.w3.org/2002/07/owl#hasValue"/>
   </rdfs:Property>
 
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_personal_income">
     <rdfs:label xml:lang="fr">has_personal_income</rdfs:label>
     <rdfs:comment xml:lang="fr">Données sur le montant des salaires dans chaque état et pour une année donnée  </rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Salaire">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Salaire">
     <rdfs:range rdf:resource="https://www.w3.org/2002/07/owl#hasValue"/>
   </rdfs:Property>
 
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_per_capita_personal_income">
     <rdfs:label xml:lang="fr">has_per_capita_personal_income</rdfs:label>
     <rdfs:comment xml:lang="fr">Données sur le montant des salaires par habitant dans chaque état et pour une année donnée  </rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Salaire">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Salaire">
     <rdfs:range rdf:resource="https://www.w3.org/2002/07/owl#hasValue"/>
   </rdfs:Property>
 
   <rdfs:Property rdf:about="https://bills-and-pills.herokuapp.com/rdf#has_trimestre">
     <rdfs:label xml:lang="fr">has_trimestre</rdfs:label>
     <rdfs:comment xml:lang="fr">se refère au trimestre pour laquelle l'esemble des statistiques sur les salaires ont été relevées par état et par année</rdfs:comment>
-    <rdfs:domain rdf:resource="http://91.168.117.237:1905#Salaire">
+    <rdfs:domain rdf:resource="http://91.160.67.64:36000#Salaire">
     <rdfs:range rdf:resource="https://www.w3.org/2002/07/owl#hasValue"/>
   <rdfs:type>
 
