@@ -5,7 +5,7 @@ const { addAbortSignal } = require('stream');
 const _ = require("underscore");
 const fetch = require("cross-fetch");
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const drugsURL = "http://91.168.117.237:1905/";
+const drugsURL = "http://91.160.67.64:36000/";
 
 module.exports = class CollectorDrugs {
     

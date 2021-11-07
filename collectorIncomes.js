@@ -15,23 +15,10 @@ module.exports = class CollectorIncomes {
     }
 
     compute() {
-        // var data = this.extract_data('incomes');
-
-        // this.data = this.extract_data('incomes');
         const that = this;
         this.format_query();
-        //console.log(this.query);
+
         if (this.query.state !== undefined) this.data = _.pick(this.data, this.query.state);
-        // this.data = (this.query.state != undefined) ? _.pick(this.data, this.query.state) : this.data;
-
-        // this.data = this.data.map(state => {
-        //     state = _.pick(state, that.query.year);
-
-        //     state = state.map(year => {
-        //         year = _.pick(year, that.query.quarter);
-            
-        //     });
-        // });
 
         for (let state in this.data) {
             var state_obj = this.data[state];
@@ -52,8 +39,7 @@ module.exports = class CollectorIncomes {
             }
             this.data[state] = state_obj;
         }
-        // console.log("COMPUTE(I) : ", this.data);
-        //console.log("COMPUTE(I) query : ", this.query);
+
         return this.data;
 
     }
